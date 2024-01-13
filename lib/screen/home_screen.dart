@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
             final user = users[index];
             final name = user.gender;
             final nat = user.nat;
-            final phone = user.phone; 
+            final phone = user.location.timeZone.description; 
             final email = user.email;
             return ListTile(
               tileColor: name == 'male'
