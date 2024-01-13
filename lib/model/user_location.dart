@@ -16,7 +16,9 @@ class UserLocation{
      });
 
   factory UserLocation.fromMap(Map<String, dynamic> json){
+
     final street = LocationStreet.fromMap(json);
+    
     final timezone = LocationTimeZone(
       offest: json['timezone']['offset'].toString(),
       description: json['timezone']['description'],
