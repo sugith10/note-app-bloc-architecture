@@ -55,13 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             );
           }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          fetchUsers();
-        },
-        backgroundColor: Colors.white,
-        shape: CircleBorder(side: BorderSide(strokeAlign: 0.5)),
-      ),
+      
     );
   }
 
