@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:new_note/screen/home_screen.dart';
 
 main(){
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -11,9 +11,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: HomeScreen(
-
-      ),
+      debugShowCheckedModeBanner: false,
+      
+      theme : ThemeData.dark(),
+      home: HomeScreen(),
       
     );
   }
