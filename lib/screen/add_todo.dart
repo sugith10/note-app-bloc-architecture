@@ -1,17 +1,40 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:new_note/util/msg.dart';
 
-class AddToDoScrn extends StatelessWidget {
-  AddToDoScrn({super.key});
+class AddToDoScrn extends StatefulWidget {
+  final Map? todo;
+  const AddToDoScrn({super.key, this.todo});
+
+  @override
+  State<AddToDoScrn> createState() => _AddToDoScrnState();
+}
+
+class _AddToDoScrnState extends State<AddToDoScrn> {
   TextEditingController titleCntrl = TextEditingController();
   TextEditingController contentCntrl = TextEditingController();
+  bool isEdit = false;
+  
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.todo != null) {
+      isEdit = true;
+      titleCntrl.text = widget.todo!['title'];
+      contentCntrl.text = widget.todo!['description'];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add ToDo'),
+        centerTitle: true,
+        title: Text(isEdit ? 'Edit Todo' : 'Add ToDo'),
       ),
       body: ListView(
         padding: EdgeInsets.all(8),
@@ -19,7 +42,7 @@ class AddToDoScrn extends StatelessWidget {
           TextField(
             controller: titleCntrl,
             textCapitalization: TextCapitalization.sentences,
-            decoration: InputDecoration(hintText: 'Title'),
+            decoration: const InputDecoration(hintText: 'Title'),
           ),
           const SizedBox(
             height: 20,
@@ -27,7 +50,7 @@ class AddToDoScrn extends StatelessWidget {
           TextField(
             controller: contentCntrl,
             textCapitalization: TextCapitalization.sentences,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: 'Content',
             ),
             keyboardType: TextInputType.multiline,
@@ -39,12 +62,13 @@ class AddToDoScrn extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              submitData(context);
+              print(isEdit);
+              isEdit ? updateTodo(widget.todo!['_id']) : submitData(context);
             },
-            child: Text('Submit'),
             style: ElevatedButton.styleFrom(
               fixedSize: const Size(30, 50),
             ),
+            child: Text(isEdit ? 'Update' : 'Submit'),
           )
         ],
       ),
@@ -68,20 +92,37 @@ class AddToDoScrn extends StatelessWidget {
     if (response.statusCode == 201) {
       Navigator.pop(context);
       print('Creation Success');
-      showSuccessMessage('Creation Success', context);
+      Message().showSuccessMessage('Creation Success', context);
     } else {
       print('Creation Failed');
-      showSuccessMessage('Creation Success', context);
+      Message().showSuccessMessage('Creation Failed', context);
       print(response.body);
     }
   }
 
-  void showSuccessMessage(String message, BuildContext context){
-    final snackBar = SnackBar(content: Text(message));
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  Future<void> updateTodo(String id) async {
+    final title = titleCntrl.text;
+    final content = contentCntrl.text;
+    final body = {
+      "title": title,
+      "description": content,
+      "is_completed": false
+    };
+
+    final url = 'https://api.nstack.in/v1/todos/$id';
+    final uri = Uri.parse(url);
+    final response = await http.put(uri,
+        body: jsonEncode(body), headers: {'Content-Type': 'application/json'});
+
+   if (response.statusCode == 200) {
+      Navigator.pop(context);
+      print('Update Success');
+      Message().showSuccessMessage('Update Success', context);
+    } else {
+      print('Update Failed');
+      Message().showSuccessMessage('Update Failed', context);
+      print(response.body);
+    }
   }
-
-
+  
 }
-
-
