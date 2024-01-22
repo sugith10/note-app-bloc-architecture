@@ -106,6 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       isLoading = false;
     });
+    getTopRatedMovies();
   }
 
   Future<void> delete(String id) async {
@@ -143,3 +144,32 @@ class _HomeScreenState extends State<HomeScreen> {
    fetchToDo();
   }
 }
+
+
+
+
+  String apiKey = '8fd500dec7d3830c67ec5e565258e1a9';
+
+  Future<void> getTopRatedMovies() async {
+    print('function start');
+
+    final url = 'https://api.themoviedb.org/3/movie/popular?api_key=$apiKey';
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        print('successfully fetched the data');
+        // Parse the response if needed
+      } else {
+        print('failed');
+        print('Status Code: ${response.statusCode}');
+        // print('Response Body: ${response.body}');
+      }
+    } catch (e) {
+      print('Error: ${e.toString()}');
+    }
+
+    print('function end');
+  }
+
