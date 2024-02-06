@@ -39,6 +39,9 @@ class _AddToDoScrnState extends State<AddToDoScrn> {
       body: ListView(
         padding: EdgeInsets.all(8),
         children: [
+            const SizedBox(
+            height: 20,
+          ),
           TextField(
             controller: titleCntrl,
             textCapitalization: TextCapitalization.sentences,
@@ -58,7 +61,7 @@ class _AddToDoScrnState extends State<AddToDoScrn> {
             maxLines: 8,
           ),
           const SizedBox(
-            height: 20,
+            height: 50,
           ),
           ElevatedButton(
             onPressed: () {
@@ -68,7 +71,7 @@ class _AddToDoScrnState extends State<AddToDoScrn> {
             style: ElevatedButton.styleFrom(
               fixedSize: const Size(30, 50),
             ),
-            child: Text(isEdit ? 'Update' : 'Submit'),
+            child: Text(isEdit ? 'Update' : 'Submit', style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 22.5, color: Colors.black),),
           )
         ],
       ),

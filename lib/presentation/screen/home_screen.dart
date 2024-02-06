@@ -1,12 +1,13 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:new_note/screen/add_todo.dart';
+import 'package:new_note/presentation/screen/add_todo.dart';
 import 'package:http/http.dart' as http;
 import 'package:new_note/util/msg.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({super.key});
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -27,11 +28,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text('ToDo List')),
+        title: const Center(child: Text('My Notes')),
       ),
       body: Visibility(
         visible: isLoading,
-        child: Center(child: CircularProgressIndicator()),
         replacement: RefreshIndicator(
           onRefresh: () => fetchToDo(),
           child: ListView.builder(
@@ -41,21 +41,32 @@ class _HomeScreenState extends State<HomeScreen> {
               final id = item['_id'];
               return ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: const Color.fromARGB(255, 38, 38, 38),
+                  backgroundColor: const Color.fromARGB(255, 151, 108, 93),
                   child: Text(
                     '${index + 1}',
+                    style: const TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 title: Text(
                   item['title'],
                   overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20
+                  ),
                 ),
                 subtitle: Text(
                   item['description'],
+                   style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 17
+                  ),
                   overflow: TextOverflow.ellipsis,
                 ),
-                trailing: PopupMenuButton(onSelected: (value) {
+                trailing: PopupMenuButton(
+                  color: const Color.fromARGB(255, 204, 165, 150),
+                  onSelected: (value) {
                   if (value == 'edit') {
                     navigateToEditPage(item);
                   } else if (value == 'delete') {
@@ -77,14 +88,15 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
         ),
+        child: const Center(child: CircularProgressIndicator()),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: Color.fromARGB(255, 40, 40, 40),
+        backgroundColor: const Color.fromARGB(255, 40, 40, 40),
         shape: const StadiumBorder(),
         onPressed: () {
         navigateToAddPage();
         },
-        label: Text(
+        label: const Text(
           'Add To Do',
           style: TextStyle(color: Colors.white),
         ),
@@ -94,8 +106,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> fetchToDo() async {
     const url = 'https://api.nstack.in/v1/todos?page=1&limit=20';
+
+    try{
     final uri = Uri.parse(url);
-    final response = await http.get(uri);
+       final response = await http.get(uri);
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body) as Map;
       final result = json['items'];
@@ -106,7 +120,11 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       isLoading = false;
     });
-    getTopRatedMovies();
+    }catch(e){
+      log('$e');
+    }
+ 
+  
   }
 
   Future<void> delete(String id) async {
@@ -147,29 +165,4 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
 
-
-  String apiKey = '8fd500dec7d3830c67ec5e565258e1a9';
-
-  Future<void> getTopRatedMovies() async {
-    print('function start');
-
-    final url = 'https://api.themoviedb.org/3/movie/popular?api_key=$apiKey';
-
-    try {
-      final response = await http.get(Uri.parse(url));
-
-      if (response.statusCode == 200) {
-        print('successfully fetched the data');
-        // Parse the response if needed
-      } else {
-        print('failed');
-        print('Status Code: ${response.statusCode}');
-        // print('Response Body: ${response.body}');
-      }
-    } catch (e) {
-      print('Error: ${e.toString()}');
-    }
-
-    print('function end');
-  }
 
