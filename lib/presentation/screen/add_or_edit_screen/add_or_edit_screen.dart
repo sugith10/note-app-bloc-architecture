@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
+import 'package:new_note/bloc/note_bloc.dart';
 import 'package:new_note/model/note_model/note_model.dart';
 import 'package:new_note/util/msg.dart';
 
@@ -68,8 +70,20 @@ class _AddToDoScrnState extends State<AddToDoScrn> {
           ),
           ElevatedButton(
             onPressed: () {
-              print(isEdit);
-              isEdit ? updateTodo(widget.note!.id) : submitData(context);
+              // print(isEdit);
+              // isEdit ? updateTodo(widget.note!.id) : submitData(context);
+              final noteBloc = BlocProvider.of<NoteBloc>(context);
+              if(isEdit){
+               noteBloc.add(
+                UpdateNote(id: widget.note!.id, 
+                title: titleCntrl.text, content: contentCntrl.text)
+               );
+              }else{
+                noteBloc.add(
+                  AddNote(title: titleCntrl.text, content: contentCntrl.text)
+                );
+              }
+              Navigator.pop(context);
             },
             style: ElevatedButton.styleFrom(
               fixedSize: const Size(30, 50),
@@ -87,53 +101,53 @@ class _AddToDoScrnState extends State<AddToDoScrn> {
     );
   }
 
-  Future<void> submitData(BuildContext context) async {
-    final title = titleCntrl.text;
-    final content = contentCntrl.text;
-    final body = {
-      "title": title,
-      "description": content,
-      "is_completed": false
-    };
+  // Future<void> submitData(BuildContext context) async {
+  //   // final title = titleCntrl.text;
+  //   // final content = contentCntrl.text;
+  //   // final body = {
+  //   //   "title": title,
+  //   //   "description": content,
+  //   //   "is_completed": false
+  //   // };
 
-    final url = 'https://api.nstack.in/v1/todos';
-    final uri = Uri.parse(url);
-    final response = await http.post(uri,
-        body: jsonEncode(body), headers: {'Content-Type': 'application/json'});
+  //   // final url = 'https://api.nstack.in/v1/todos';
+  //   // final uri = Uri.parse(url);
+  //   // final response = await http.post(uri,
+  //   //     body: jsonEncode(body), headers: {'Content-Type': 'application/json'});
 
-    if (response.statusCode == 201) {
-      Navigator.pop(context);
-      print('Creation Success');
-      Message().showSuccessMessage('Creation Success', context);
-    } else {
-      print('Creation Failed');
-      Message().showSuccessMessage('Creation Failed', context);
-      print(response.body);
-    }
-  }
+  //   // if (response.statusCode == 201) {
+  //   //   Navigator.pop(context);
+  //   //   print('Creation Success');
+  //   //   Message().showSuccessMessage('Creation Success', context);
+  //   // } else {
+  //   //   print('Creation Failed');
+  //   //   Message().showSuccessMessage('Creation Failed', context);
+  //   //   print(response.body);
+  //   // }
+  // }
 
-  Future<void> updateTodo(String id) async {
-    final title = titleCntrl.text;
-    final content = contentCntrl.text;
-    final body = {
-      "title": title,
-      "description": content,
-      "is_completed": false
-    };
+  // Future<void> updateTodo(String id) async {
+  //   final title = titleCntrl.text;
+  //   final content = contentCntrl.text;
+  //   final body = {
+  //     "title": title,
+  //     "description": content,
+  //     "is_completed": false
+  //   };
 
-    final url = 'https://api.nstack.in/v1/todos/$id';
-    final uri = Uri.parse(url);
-    final response = await http.put(uri,
-        body: jsonEncode(body), headers: {'Content-Type': 'application/json'});
+  //   final url = 'https://api.nstack.in/v1/todos/$id';
+  //   final uri = Uri.parse(url);
+  //   final response = await http.put(uri,
+  //       body: jsonEncode(body), headers: {'Content-Type': 'application/json'});
 
-    if (response.statusCode == 200) {
-      Navigator.pop(context);
-      print('Update Success');
-      Message().showSuccessMessage('Update Success', context);
-    } else {
-      print('Update Failed');
-      Message().showSuccessMessage('Update Failed', context);
-      print(response.body);
-    }
-  }
+  //   if (response.statusCode == 200) {
+  //     Navigator.pop(context);
+  //     print('Update Success');
+  //     Message().showSuccessMessage('Update Success', context);
+  //   } else {
+  //     print('Update Failed');
+  //     Message().showSuccessMessage('Update Failed', context);
+  //     print(response.body);
+  //   }
+  // }
 }

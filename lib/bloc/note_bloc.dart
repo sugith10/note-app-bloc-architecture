@@ -9,8 +9,17 @@ part 'note_state.dart';
 class NoteBloc extends Bloc<NoteEvent, NoteState> {
   final NoteRepository noteRepository;
   NoteBloc(this.noteRepository) : super(NoteInitial()) {
+    emit(NoteLoading());
     on<AddNote>(
-      ((event, emit) async {}),
+      ((event, emit) async {
+        try{
+          final notes = await noteRepository.addNotes(
+            title: event.title, content: event.content);
+            emit(NoteSuccess(notes));
+        }catch(e){
+          emit(NoteFail(e.toString()));
+        }
+      }),
     );
 
     on<GetNote>(((event, emit) async {
@@ -23,7 +32,17 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
       }
     }));
 
-    on<UpdateNote>(((event, emit) async {}));
+    on<UpdateNote>(((event, emit) async {
+      emit(NoteLoading());
+      try{
+        final notes = await noteRepository.updateNotes(
+          id: event.id, 
+          title: event.title, content: event.content);
+          emit(NoteSuccess(notes));
+      }catch(e){
+        emit(NoteFail(e.toString()));
+      }
+    }));
 
     on<DeleteNote>(
       ((event, emit) async {

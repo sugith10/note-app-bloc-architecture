@@ -122,10 +122,6 @@ class _HomeScreenState extends State<HomeScreen> {
           duration: const Duration(milliseconds: 400),
           reverseDuration: const Duration(milliseconds: 400)),
     );
-    // setState(() {
-    //   isLoading = true;
-    // });
-    //  fetchToDo();
   }
 }
 
