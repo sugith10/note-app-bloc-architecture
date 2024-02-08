@@ -9,4 +9,7 @@ class GetNote extends NoteEvent {}
 
 class UpdateNote extends NoteEvent {}
 
-class DeleteNote extends NoteEvent {}
+class DeleteNote extends NoteEvent {
+  final String id;
+  DeleteNote({required this.id});
+}

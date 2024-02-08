@@ -13,5 +13,18 @@ class NoteDataProvider{
       throw e.toString();
     }
   }
+
+  Future<String> deleteNote(String id)async{
+    final url = 'https://api.nstack.in/v1/todos/$id';
+    try{
+      final uri = Uri.parse(url);
+      final res = await http.delete(uri);
+      return res.body;
+    }catch(e){
+      log('delete error: $e');
+      throw e.toString();
+    }
+
+  }
   
 }

@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:new_note/model/note_model/note_model.dart';
 import 'package:new_note/util/msg.dart';
 
 class AddToDoScrn extends StatefulWidget {
-  final Map? todo;
-  const AddToDoScrn({super.key, this.todo});
+  final NoteModel? note;
+
+  const AddToDoScrn({super.key, this.note});
 
   @override
   State<AddToDoScrn> createState() => _AddToDoScrnState();
@@ -15,17 +17,15 @@ class _AddToDoScrnState extends State<AddToDoScrn> {
   TextEditingController titleCntrl = TextEditingController();
   TextEditingController contentCntrl = TextEditingController();
   bool isEdit = false;
-  
-
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (widget.todo != null) {
+    if (widget.note != null) {
       isEdit = true;
-      titleCntrl.text = widget.todo!['title'];
-      contentCntrl.text = widget.todo!['description'];
+      titleCntrl.text = widget.note!.title;
+      contentCntrl.text = widget.note!.description;
     }
   }
 
@@ -39,13 +39,14 @@ class _AddToDoScrnState extends State<AddToDoScrn> {
       body: ListView(
         padding: EdgeInsets.all(8),
         children: [
-            const SizedBox(
+          const SizedBox(
             height: 20,
           ),
           TextField(
             controller: titleCntrl,
             textCapitalization: TextCapitalization.sentences,
             decoration: const InputDecoration(hintText: 'Title'),
+            style: TextStyle(fontWeight: FontWeight.w900, fontSize: 25),
           ),
           const SizedBox(
             height: 20,
@@ -55,10 +56,12 @@ class _AddToDoScrnState extends State<AddToDoScrn> {
             textCapitalization: TextCapitalization.sentences,
             decoration: const InputDecoration(
               hintText: 'Content',
+              
             ),
             keyboardType: TextInputType.multiline,
             minLines: 5,
             maxLines: 8,
+  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
           ),
           const SizedBox(
             height: 50,
@@ -66,12 +69,18 @@ class _AddToDoScrnState extends State<AddToDoScrn> {
           ElevatedButton(
             onPressed: () {
               print(isEdit);
-              isEdit ? updateTodo(widget.todo!['_id']) : submitData(context);
+              isEdit ? updateTodo(widget.note!.id) : submitData(context);
             },
             style: ElevatedButton.styleFrom(
               fixedSize: const Size(30, 50),
             ),
-            child: Text(isEdit ? 'Update' : 'Submit', style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 22.5, color: Colors.black),),
+            child: Text(
+              isEdit ? 'Update' : 'Submit',
+              style: const TextStyle(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 22.5,
+                  color: Colors.black),
+            ),
           )
         ],
       ),
@@ -101,8 +110,6 @@ class _AddToDoScrnState extends State<AddToDoScrn> {
       Message().showSuccessMessage('Creation Failed', context);
       print(response.body);
     }
-
-    
   }
 
   Future<void> updateTodo(String id) async {
@@ -119,7 +126,7 @@ class _AddToDoScrnState extends State<AddToDoScrn> {
     final response = await http.put(uri,
         body: jsonEncode(body), headers: {'Content-Type': 'application/json'});
 
-   if (response.statusCode == 200) {
+    if (response.statusCode == 200) {
       Navigator.pop(context);
       print('Update Success');
       Message().showSuccessMessage('Update Success', context);
@@ -129,5 +136,4 @@ class _AddToDoScrnState extends State<AddToDoScrn> {
       print(response.body);
     }
   }
-  
 }

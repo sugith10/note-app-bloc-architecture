@@ -32,6 +32,10 @@ final ThemeData vintageTheme = ThemeData(
       borderRadius: BorderRadius.circular(20.0),
     ),
   ),
+  floatingActionButtonTheme: const FloatingActionButtonThemeData(
+    backgroundColor: Colors.brown,
+    
+  ),
   appBarTheme: const AppBarTheme(
     color: Colors.brown,
     elevation: 0,
@@ -51,3 +55,4 @@ final ThemeData vintageTheme = ThemeData(
     color: Colors.brown[200],
   ),
 );
+ 

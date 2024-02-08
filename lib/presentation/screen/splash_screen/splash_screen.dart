@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:new_note/presentation/screen/home_screen.dart';
+import 'package:new_note/presentation/screen/home_screen/home_screen.dart';
 
 class SplashPage extends StatelessWidget {
   const SplashPage({super.key});
