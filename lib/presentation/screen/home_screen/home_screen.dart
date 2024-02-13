@@ -1,10 +1,9 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:new_note/bloc/note_bloc.dart';
 import 'package:new_note/presentation/screen/add_or_edit_screen/add_or_edit_screen.dart';
-import 'package:http/http.dart' as http;
-import 'package:new_note/presentation/screen/view_note_screen/view_note_screen.dart';
-import 'package:new_note/util/msg.dart';
+import 'package:new_note/presentation/screen/home_screen/widget/note_listview_widget.dart';
 import 'package:page_transition/page_transition.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -27,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    log('on build function');
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -55,46 +55,8 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         }
 
-        final notes = state.noteModels;
-        return ListView.builder(
-            itemCount: notes.length,
-            itemBuilder: (context, index) {
-              final note = notes[index];
-              return GestureDetector(
-                
-                onTap: () {
-                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => ViewNotePage(
-                          note: note,
-                        )));
-                        print(note.id);
-                },
-                child: ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: const Color.fromARGB(255, 151, 108, 93),
-                    child: Text(
-                      '${index + 1}',
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w900,
-                          color: Color.fromARGB(255, 255, 255, 255)),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  title: Text(
-                    note.title,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w600, fontSize: 20),
-                  ),
-                  subtitle: Text(
-                    note.description,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w500, fontSize: 17),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              );
-            });
+        final noteList = state.noteModels;
+        return NoteList(noteList: noteList);
       }),
       floatingActionButton: FloatingActionButton.extended(
         shape: const StadiumBorder(),
@@ -109,10 +71,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  empty() {}
-
-
-
   Future<void> navigateToAddPage() async {
     await Navigator.push(
       context,
@@ -124,43 +82,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-
-
-
-/*
-
-ListView.builder(
-            itemCount: items.length,
-            itemBuilder: (context, index) {
-              final item = items[index] as Map;
-              final id = item['_id'];
-              return ListTile(
-               
-                
-
-                trailing: PopupMenuButton(
-                  color: const Color.fromARGB(255, 204, 165, 150),
-                  onSelected: (value) {
-                  if (value == 'edit') {
-                    navigateToEditPage(item);
-                  } else if (value == 'delete') {
-                    delete(id);
-                  }
-                }, itemBuilder: (context) {
-                  return [
-                    const PopupMenuItem(
-                      value: 'edit',
-                      child: Text('Edit'),
-                    ),
-                    const PopupMenuItem(
-                      value: 'delete',
-                      child: Text('Delete'),
-                    ),
-                  ];
-                }),
-              );
-            },
-          )
-
-*/

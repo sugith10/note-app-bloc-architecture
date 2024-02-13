@@ -60,20 +60,19 @@ class NoteRepository {
     required String title,
     required String content,
   }) async {
-   try{
-     final noteData = await noteDataProvider.updateNote(
-      id: id,
-      title: title,
-      content: content,
-    );
-    final data = jsonDecode(noteData);
-    if(data['code'] != 200){
-      return throw ('An unexpected error occured');
+    try {
+      final noteData = await noteDataProvider.updateNote(
+        id: id,
+        title: title,
+        content: content,
+      );
+      final data = jsonDecode(noteData);
+      if (data['code'] != 200) {
+        return throw ('An unexpected error occured');
+      }
+      return getNotes();
+    } catch (e) {
+      throw e.toString();
     }
-    return getNotes();
-   }catch(e){
-    throw e.toString();
-
-   }
   }
 }

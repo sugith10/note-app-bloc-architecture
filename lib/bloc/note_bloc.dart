@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:new_note/data/repository/note_repository.dart';
 import 'package:new_note/model/note_model/note_model.dart';
@@ -9,7 +9,7 @@ part 'note_state.dart';
 class NoteBloc extends Bloc<NoteEvent, NoteState> {
   final NoteRepository noteRepository;
   NoteBloc(this.noteRepository) : super(NoteInitial()) {
-    emit(NoteLoading());
+
     on<AddNote>(
       ((event, emit) async {
         try{
