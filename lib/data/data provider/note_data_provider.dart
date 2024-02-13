@@ -37,9 +37,11 @@ class NoteDataProvider {
       };
       const url = 'https://api.nstack.in/v1/todos';
       final uri = Uri.parse(url);
-      final response = await http.post(uri,
-          body: jsonEncode(body),
-          headers: {'Content-Type': 'application/json'});
+      final response = await http.post(
+        uri,
+        body: jsonEncode(body),
+        headers: {'Content-Type': 'application/json'},
+      );
       return response.body;
     } catch (e) {
       throw e.toString();
@@ -71,4 +73,3 @@ class NoteDataProvider {
     }
   }
 }
-

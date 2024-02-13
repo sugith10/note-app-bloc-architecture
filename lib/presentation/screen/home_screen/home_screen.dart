@@ -41,7 +41,8 @@ class _HomeScreenState extends State<HomeScreen> {
           )
         ],
       ),
-      body: BlocBuilder<NoteBloc, NoteState>(builder: (context, state) {
+      body: BlocBuilder<NoteBloc, NoteState>(
+        builder: (context, state) {
         if (state is NoteFail) {
           return Center(
             child: Text(state.error),
@@ -76,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
       context,
       PageTransition(
           type: PageTransitionType.rightToLeftWithFade,
-          child: const AddToDoScrn(),
+          child:  AddToDoScrn(),
           duration: const Duration(milliseconds: 400),
           reverseDuration: const Duration(milliseconds: 400)),
     );

@@ -3,40 +3,30 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:new_note/bloc/note_bloc.dart';
 import 'package:new_note/model/note_model/note_model.dart';
 
-class AddToDoScrn extends StatefulWidget {
+// ignore: must_be_immutable
+class AddToDoScrn extends StatelessWidget {
+
   final NoteModel? note;
+  AddToDoScrn({super.key, this.note});
 
-  const AddToDoScrn({super.key, this.note});
-
-  @override
-  State<AddToDoScrn> createState() => _AddToDoScrnState();
-}
-
-class _AddToDoScrnState extends State<AddToDoScrn> {
   TextEditingController titleCntrl = TextEditingController();
   TextEditingController contentCntrl = TextEditingController();
   bool isEdit = false;
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    if (widget.note != null) {
-      isEdit = true;
-      titleCntrl.text = widget.note!.title;
-      contentCntrl.text = widget.note!.description;
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+     if (note != null) {
+      isEdit = true;
+      titleCntrl.text = note!.title;
+      contentCntrl.text = note!.description;
+    }
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text(isEdit ? 'Edit Todo' : 'Add ToDo'),
       ),
       body: ListView(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         children: [
           const SizedBox(
             height: 20,
@@ -45,7 +35,7 @@ class _AddToDoScrnState extends State<AddToDoScrn> {
             controller: titleCntrl,
             textCapitalization: TextCapitalization.sentences,
             decoration: const InputDecoration(hintText: 'Title'),
-            style: TextStyle(fontWeight: FontWeight.w900, fontSize: 25),
+            style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 25),
           ),
           const SizedBox(
             height: 20,
@@ -59,17 +49,17 @@ class _AddToDoScrnState extends State<AddToDoScrn> {
             keyboardType: TextInputType.multiline,
             minLines: 5,
             maxLines: 8,
-            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+            style:const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
           ),
           const SizedBox(
             height: 50,
           ),
           ElevatedButton(
             onPressed: () {
-              final noteBloc = BlocProvider.of<NoteBloc>(context);
+              final noteBloc =  BlocProvider.of<NoteBloc>(context); 
               if (isEdit) {
                 noteBloc.add(UpdateNote(
-                    id: widget.note!.id,
+                    id: note!.id,
                     title: titleCntrl.text,
                     content: contentCntrl.text));
               } else {
@@ -88,7 +78,8 @@ class _AddToDoScrnState extends State<AddToDoScrn> {
                   fontSize: 22.5,
                   color: Colors.black),
             ),
-          )
+          ),
+
         ],
       ),
     );
